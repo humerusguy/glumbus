@@ -1,30 +1,40 @@
-[gd_scene load_steps=5 format=3 uid="uid://bnfylqby0xm05"]
+[gd_scene load_steps=7 format=3 uid="uid://bnfylqby0xm05"]
 
 [ext_resource type="Script" uid="uid://ccxfxmlvg4tsl" path="res://scene/main.gd" id="1_brvut"]
 [ext_resource type="PackedScene" uid="uid://0881bn4sdnih" path="res://scene/player.tscn" id="1_v0l8b"]
+[ext_resource type="Shader" uid="uid://byqar7mjnk3p3" path="res://Resource/Shader/pixelation.gdshader" id="2_0ha60"]
 [ext_resource type="PackedScene" uid="uid://bd100gsj6q4c" path="res://scene/pause_menu.tscn" id="2_v0l8b"]
 [ext_resource type="PackedScene" uid="uid://cmujybr222v0f" path="res://scene/world.tscn" id="2_wp4xf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4j5ol"]
+render_priority = 0
+shader = ExtResource("2_0ha60")
+shader_parameter/target_resolution = Vector2(320, 180)
+shader_parameter/colors_per_channel = 8.0
+shader_parameter/depth_outline_strength = 0.8
+shader_parameter/normal_outline_strength = 0.5
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_brvut")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+material = SubResource("ShaderMaterial_4j5ol")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 handle_input_locally = false
 size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
-[node name="Player" parent="SubViewportContainer/SubViewport" node_paths=PackedStringArray("pause_menu") instance=ExtResource("1_v0l8b")]
+[node name="Player" parent="SubViewportContainer/SubViewport" node_paths=PackedStringArray("pause_menu", "camera_target") instance=ExtResource("1_v0l8b")]
 pause_menu = NodePath("../../../CanvasLayer/PauseMenu")
+camera_target = NodePath(".")
 
-[node name="root" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_wp4xf")]
+[node name="World" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_wp4xf")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

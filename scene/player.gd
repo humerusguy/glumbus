@@ -6,16 +6,24 @@ const JUMP_VELOCITY = 3.0
 @export var pause_menu: Control
 @export var projectile_scene: PackedScene
 @export var shoot_cooldown: float = 0.25
+@export var camera_target: Node3D
 
+var camera: Camera3D
 var is_game_paused = false
 var shoot_timer: float = 0.0
-signal shoot_requested(spawn_transform, direction)
 
 func _ready():
 	if pause_menu:
 		pause_menu.connect("pause_requested", Callable(self, "_on_pause_requested"))
 		pause_menu.connect("resume_requested", Callable(self, "_on_resume_requested"))
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
+	camera = get_viewport().get_camera_3d()
+	if not camera:
+		printerr("Error: No Camera3D found in the scene.")
+		return
+	if not camera_target:
+		printerr("Error: No Camera Target Node found.")
+		return
 
 func _on_pause_requested():
 	toggle_pause()
@@ -35,17 +43,12 @@ func _physics_process(delta):
 	if is_game_paused:
 		return
 	_apply_gravity(delta)
-	_handle_jump()
 	_handle_movement()
 	move_and_slide()
 
 func _apply_gravity(delta):
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-
-func _handle_jump():
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
 
 func _handle_movement():
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
@@ -64,10 +67,11 @@ func _process(delta):
 	_handle_shooting(delta)
 
 func look_at_cursor():
+	if not camera:
+		return
 	var plane = Plane(Vector3.UP, global_transform.origin.y)
 	var ray_length = 1000
 	var mouse_pos = get_viewport().get_mouse_position()
-	var camera = get_viewport().get_camera_3d()
 	var from = camera.project_ray_origin(mouse_pos)
 	var to = from + camera.project_ray_normal(mouse_pos) * ray_length
 	var hit_point = plane.intersects_ray(from, to)
@@ -86,12 +90,12 @@ func _handle_shooting(delta):
 
 func shoot_projectile():
 	if not projectile_scene:
+		printerr("Error: Projectile scene not assigned in the Inspector.")
 		return
 
 	var plane = Plane(Vector3.UP, global_transform.origin.y)
 	var ray_length = 1000
 	var mouse_pos = get_viewport().get_mouse_position()
-	var camera = get_viewport().get_camera_3d()
 	var from = camera.project_ray_origin(mouse_pos)
 	var to = from + camera.project_ray_normal(mouse_pos) * ray_length
 	var hit_point = plane.intersects_ray(from, to)

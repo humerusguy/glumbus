@@ -1,26 +1,47 @@
-[gd_scene load_steps=5 format=3 uid="uid://0881bn4sdnih"]
+[gd_scene load_steps=9 format=3 uid="uid://0881bn4sdnih"]
 
 [ext_resource type="Script" uid="uid://coxtqako1rqn4" path="res://scene/player.gd" id="1_hjaqi"]
 [ext_resource type="PackedScene" uid="uid://c1aks0hyw0bxi" path="res://scene/bullet.tscn" id="2_fvtld"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_hjaqi"]
+[ext_resource type="Shader" uid="uid://byqar7mjnk3p3" path="res://Resource/Shader/pixelation.gdshader" id="3_fvtld"]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_hjaqi"]
 points = PackedVector3Array(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5)
 
-[node name="Player" type="CharacterBody3D"]
+[sub_resource type="BoxMesh" id="BoxMesh_hjaqi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fvtld"]
+albedo_color = Color(0, 0.428863, 0.930645, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ha60"]
+render_priority = 0
+shader = ExtResource("3_fvtld")
+shader_parameter/target_resolution = Vector2(320, 180)
+shader_parameter/colors_per_channel = 8.0
+shader_parameter/depth_outline_strength = 0.8
+shader_parameter/normal_outline_strength = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_ct4mp"]
+material = SubResource("ShaderMaterial_0ha60")
+flip_faces = true
+size = Vector2(2, 2)
+
+[node name="Player" type="CharacterBody3D" groups=["skewable"]]
 script = ExtResource("1_hjaqi")
 projectile_scene = ExtResource("2_fvtld")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.707107, -0.707107, 0, 0.579228, 0.579228, -0.573576, 0.40558, 0.40558, 0.819152, 0, 2.09742, 0)
-mesh = SubResource("BoxMesh_hjaqi")
-skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.707107, -0.707107, 0, 0.579228, 0.579228, -0.573576, 0.40558, 0.40558, 0.819152, 0, 2.09742, 0)
 shape = SubResource("ConvexPolygonShape3D_hjaqi")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, -0.707107, 0, 0.579228, 0.579228, -0.573576, 0.40558, 0.40558, 0.819152, 0, 2.09742, 0)
+mesh = SubResource("BoxMesh_hjaqi")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("StandardMaterial3D_fvtld")
+
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.569279, 0.822144, 0, -0.822144, 0.569279, -0.0643577, 14.8856, 7.93557)
+transform = Transform3D(1, 0, 0, 0, 0.34202, 0.939693, 0, -0.939693, 0.34202, 0, 13.5, 3.5)
 fov = 62.6747
+
+[node name="PostProcessing" type="MeshInstance3D" parent="Camera3D"]
+mesh = SubResource("QuadMesh_ct4mp")
