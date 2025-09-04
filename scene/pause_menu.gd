@@ -3,18 +3,12 @@ extends Control
 signal resume_requested
 signal pause_requested
 
+@onready var resume_button = $ColorRect/VBoxContainer/ResumeButton
+@onready var quit_button = $ColorRect/VBoxContainer/QuitButton
+
 func _ready():
-	process_mode = Node.PROCESS_MODE_ALWAYS
-	set_process_input(true)
-	visible = false
-
-	$ColorRect.anchor_left = 0
-	$ColorRect.anchor_top = 0
-	$ColorRect.anchor_right = 1
-	$ColorRect.anchor_bottom = 1
-
-	$VBoxContainer/ResumeButton.pressed.connect(_on_resume_pressed)
-	$VBoxContainer/QuitButton.pressed.connect(_on_quit_pressed)
+	resume_button.pressed.connect(_on_resume_button_pressed)
+	quit_button.pressed.connect(_on_quit_button_pressed)
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
@@ -25,14 +19,16 @@ func _input(event):
 
 func show_menu():
 	visible = true
+	get_tree().paused = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func hide_menu():
 	visible = false
+	get_tree().paused = false
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 
-func _on_resume_pressed():
-	emit_signal("resume_requested")
+func _on_resume_button_pressed():
+	hide_menu()
 
-func _on_quit_pressed():
+func _on_quit_button_pressed():
 	get_tree().quit()

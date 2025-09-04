@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://0881bn4sdnih"]
+
+[ext_resource type="Script" uid="uid://coxtqako1rqn4" path="res://scene/player.gd" id="1_hjaqi"]
+[ext_resource type="PackedScene" uid="uid://c1aks0hyw0bxi" path="res://scene/bullet.tscn" id="2_fvtld"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hjaqi"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_hjaqi"]
+points = PackedVector3Array(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5)
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_hjaqi")
+projectile_scene = ExtResource("2_fvtld")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, -0.707107, 0, 0.579228, 0.579228, -0.573576, 0.40558, 0.40558, 0.819152, 0, 2.09742, 0)
+mesh = SubResource("BoxMesh_hjaqi")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.707107, -0.707107, 0, 0.579228, 0.579228, -0.573576, 0.40558, 0.40558, 0.819152, 0, 2.09742, 0)
+shape = SubResource("ConvexPolygonShape3D_hjaqi")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.569279, 0.822144, 0, -0.822144, 0.569279, -0.0643577, 14.8856, 7.93557)
+fov = 62.6747

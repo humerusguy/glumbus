@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3 uid="uid://cmujybr222v0f"]
+
+[ext_resource type="Texture2D" uid="uid://b81bkks3b20pn" path="res://sprites/world/grassplaceholder.png" id="1_pjass"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_txmk2"]
+albedo_texture = ExtResource("1_pjass")
+uv1_scale = Vector3(5, 5, 5)
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_w4qq1"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_m5mgf"]
+points = PackedVector3Array(1.01587, 0.015873, 1.01587, -1.01587, -0.015873, -1.01587, -1.01587, 0.015873, -1.01587, 1.01587, -0.015873, -1.01587, -1.01587, -0.015873, 1.01587, -1.01587, 0.015873, 1.01587, 1.01587, 0.015873, -1.01587, 1.01587, -0.015873, 1.01587)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_emkrx"]
+points = PackedVector3Array(1.01587, 0.015873, 1.01587, -1.01587, -0.015873, -1.01587, -1.01587, 0.015873, -1.01587, 1.01587, -0.015873, -1.01587, -1.01587, -0.015873, 1.01587, -1.01587, 0.015873, 1.01587, 1.01587, 0.015873, -1.01587, 1.01587, -0.015873, 1.01587)
+
+[node name="root" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.841596, 0.540108, 0, -0.540108, 0.841596, -0.827404, 10.2104, 5.24076)
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.544844, 0)
+collision_layer = 3
+collision_mask = 3
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_txmk2")
+mesh = SubResource("PlaneMesh_w4qq1")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_m5mgf")
+
+[node name="Wall" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.00612605, -0.999981, 0, 0.999981, -0.00612605, 0, 7.67291, 0)
+collision_layer = 3
+collision_mask = 3
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Wall"]
+transform = Transform3D(-5, 4.37114e-07, 0, 4.37114e-07, 5, -4.37722e-07, -3.73035e-14, -4.37722e-07, -5, 0, -4.93239, 2.24151)
+material_override = SubResource("StandardMaterial3D_txmk2")
+mesh = SubResource("PlaneMesh_w4qq1")
+skeleton = NodePath("../../../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall"]
+transform = Transform3D(-5, 4.37114e-07, 0, 4.37114e-07, 5, -4.37722e-07, -3.73035e-14, -4.37722e-07, -5, 0, -4.93239, 2.24151)
+shape = SubResource("ConvexPolygonShape3D_emkrx")
