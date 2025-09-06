@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://daxjmfp24vify"]
+
+[ext_resource type="Script" uid="uid://demg3e5ft8mrd" path="res://scene/enemy.gd" id="1_h08p8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vufel"]
+albedo_color = Color(0.729412, 0, 0.180392, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h08p8"]
+material = SubResource("StandardMaterial3D_vufel")
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_f87vc"]
+points = PackedVector3Array(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5)
+
+[node name="Enemy" type="CharacterBody3D" groups=["Enemy"]]
+script = ExtResource("1_h08p8")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_h08p8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_f87vc")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("ConvexPolygonShape3D_f87vc")

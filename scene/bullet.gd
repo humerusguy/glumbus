@@ -10,30 +10,33 @@ var time_alive: float = 0.0
 @onready var ray_cast = $RayCast3D
 
 func _ready() -> void:
-	ray_cast.set_collision_mask_value(1, true)
+	ray_cast.enabled = true
+	# This is a good practice to ensure the raycast ignores the bullet itself
+	ray_cast.add_exception(self)
 
 func _physics_process(delta: float) -> void:
+	# Set the raycast to check ahead of the bullet's current position
 	ray_cast.target_position = direction * speed * delta
 	ray_cast.force_raycast_update()
 
 	if ray_cast.is_colliding():
 		var collider = ray_cast.get_collider()
 		if collider:
-			print("Bullet hit: ", collider.name)
-			_on_despawn("collision")
-	else:
-		velocity = direction * speed
-		move_and_slide()
+			if collider.is_in_group("Enemy") and collider.has_method("take_damage"):
+				collider.take_damage(damage)
+			
+			# Despawn the bullet immediately on impact
+			queue_free()
+			return
+	
+	# Manually move the bullet if it's not colliding
+	global_transform.origin += direction * speed * delta
 
 	time_alive += delta
 	if time_alive >= lifetime:
-		_on_despawn("lifetime expired")
+		queue_free()
 		
 	_culling_check()
-
-func _on_despawn(reason: String) -> void:
-	print("Bullet despawning: ", reason)
-	queue_free()
 
 func _culling_check() -> void:
 	var camera = get_viewport().get_camera_3d()
@@ -45,7 +48,7 @@ func _culling_check() -> void:
 		var is_outside_y = viewport_pos.y < 0 or viewport_pos.y > screen_size.y
 		
 		if is_outside_x or is_outside_y:
-			_on_despawn("culling")
+			queue_free()
 
 func initialize(new_direction: Vector3) -> void:
 	direction = new_direction.normalized()

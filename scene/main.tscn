@@ -31,6 +31,7 @@ size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
 [node name="Player" parent="SubViewportContainer/SubViewport" node_paths=PackedStringArray("pause_menu", "camera_target") instance=ExtResource("1_v0l8b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.229304, 0)
 pause_menu = NodePath("../../../CanvasLayer/PauseMenu")
 camera_target = NodePath(".")
 
